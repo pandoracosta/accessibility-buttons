@@ -1,9 +1,8 @@
-<p align="right"><img src="https://github.com/ellerbrock/open-source-badges/blob/master/badges/open-source-v3/open-source.svg" alt="Open Source Love"></p>
-
+<p align="right"><img src="https://badges.frapsoft.com/os/v3/open-source.svg?v=103" alt="Open Source Love"></p>
 <p align="center"><img src="http://tiagoporto.github.io/accessibility-buttons/img/logos/accessibility-buttons-logo.svg" alt="Accessibility Buttons" width="600" /></p>
 
 <p align="right">
-  <code>LIKED ? Leave a <a href="https://github.com/tiagoporto/accessibility-buttons/stargazers">⭐</a> : <a href="https://github.com/tiagoporto/accessibility-buttons/issues">😞</a></code>
+  <code>CURTIU ? Deixe uma <a href="https://github.com/tiagoporto/accessibility-buttons/stargazers">⭐</a> : <a href="https://github.com/tiagoporto/accessibility-buttons/issues">😞</a></code>
 </p>
 
 [![Release](https://img.shields.io/npm/v/accessibility-buttons.svg?style=flat-square&label=release)](https://github.com/tiagoporto/accessibility-buttons/releases)
@@ -13,43 +12,42 @@
 [![Coverage Status](https://img.shields.io/coveralls/tiagoporto/accessibility-buttons.svg?style=flat-square)](https://coveralls.io/github/tiagoporto/accessibility-buttons)
 [![devDependencies Status](https://img.shields.io/david/dev/tiagoporto/accessibility-buttons.svg?style=flat-square)](https://david-dm.org/tiagoporto/accessibility-buttons?type=dev)
 
-> Buttons to add/remove contrast and increase/decrease font size.
+> Botões para adicionar/remover contraste e aumentar/diminuir o tamanho da fonte.
 
-## Read in [other languages](translations/translations.md).
+## Ler em [outros idiomas](./translations.md).
 
-[🇧🇷](translations/README.pt_br.md)
+[🇺🇸](../README.md)
 
-## Install
+## Instalação
 
 ```
 npm install accessibility-buttons --save
 ```
-
 ## Usage
 
-Import
+Importe
 
 - accessibility-buttons/dist/css/accessibility-buttons.css
 - accessibility-buttons/dist/js/accessibility-buttons.js
 
-Add buttons
+Insira os botões
 
 ```html
 <button type="button" data-accessibility="font">+A</button>
 <button type="button" data-accessibility="contrast">Add Contrast</button>
 ```
 
-Initialize after DOM ready
+Inicializando após o DOM ser carregado
 
 ```js
 accessibilityButtons()
 ```
 
-**Note:** Note: Font size works only with `em` or `rem` units.
+**Observação:** Font size só funciona com as unidades `em` ou `rem`.
 
-# Settings
+# Configurações
 
-To set up `buttons names` and `aria-labels`, use the following parameters.
+Para configurar os `nomes dos botões` e `aria-labels`, use os seguinte parâmetros:
 
 ```js
 // default values
@@ -70,9 +68,9 @@ accessibilityButtons({
 })
 ```
 
-`Font size` and `contrast colors` could be customized only overwritting class values.
+`Font size` e `cores do contraste` podem ser customizados sobreescrevendo as classes.
 
-Example:
+Exemplo
 
 ```css
 body {
@@ -108,16 +106,16 @@ body.accessibility-contrast {
 ```
 
 
-## Contributing
+## Contribua
 
-[Check how to contribute](CONTRIBUTING.md).
+[Veja como contribuir](CONTRIBUTING.md).
 
-## Credits
+## Créditos
 
-Accessibility `arial-label` tip - [Bruno Pulis](https://github.com/brunopulis)
+Dica de acessibilidade `arial-label` - [Bruno Pulis](https://github.com/brunopulis)
 
-Included the `$` sign in the variable name of the cached elements for easy identification  - [Adler Parnas](https://github.com/adlerparnas)
+Incluido o sinal `$` no nome da variável dos elementos cacheados para facilitar a identificação - [Adler Parnas](https://github.com/adlerparnas)
 
-## License
+## Licença
 
-Accessibility Buttons is released under the terms of the [MIT license](https://github.com/tiagoporto/accessibility-buttons/blob/master/LICENSE).
+Accessibility Buttons é lançado sob os termos da licença [MIT license](https://github.com/tiagoporto/accessibility-buttons/blob/master/LICENSE).

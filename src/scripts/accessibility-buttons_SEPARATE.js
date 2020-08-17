@@ -1,10 +1,11 @@
 /**
  * accessibilityButtons
- * @param  {object} options Options to execute the lib
+ * @param  {Array}  -
+ * @return
  */
 
 /* exported accessibilityButtons */
-const accessibilityButtons = userOptions => {
+const accessibilityButtons = options => {
     'use strict';
 
     /**
@@ -13,118 +14,138 @@ const accessibilityButtons = userOptions => {
      * @param  {string}  clazz   - Class Name
      * @return {Boolean}
      */
-    const hasClass = (element, clazz) => {
+    function hasClass(element, clazz) {
         return (` ${element.className} `).indexOf(` ${clazz} `) > -1;
-    };
+    }
 
-    const fontOptions = userOptions && userOptions.font;
-    const fontOptionsSteps = userOptions.font && userOptions.font.steps;
-    const contrastOptions = userOptions && userOptions.contrast;
-
-
-    const settings = {
+    var setting = {
         font: {
-            nameButtonIncrease: (fontOptions && fontOptions.nameButtonIncrease) || '+A',
-            ariaLabelButtonIncrease: (fontOptions && fontOptions.ariaLabelButtonIncrease) || 'Increase Font',
-            nameButtonDecrease: (fontOptions && fontOptions.nameButtonDecrease) || '-A',
-            ariaLabelButtonDecrease: (fontOptions && fontOptions.ariaLabelButtonDecrease) || 'Decrease Font',
-            steps: {
-                enable: fontOptionsSteps && !!fontOptions.steps.enable,
-                increase: (fontOptionsSteps && fontOptions.steps.increase) || 2,
-                decrease: (fontOptionsSteps && fontOptions.steps.decrease) || 2
-            }
+            nameButtonIncrease: '+A',
+            ariaLabelButtonIncrease: 'Increase Font',
+            nameButtonDecrease: '-A',
+            ariaLabelButtonDecrease: 'Decrease Font'
         },
 
         contrast: {
-            nameButtonAdd: (contrastOptions && contrastOptions.nameButtonAdd) || 'Add Contrast',
-            ariaLabelButtonAdd: (contrastOptions && contrastOptions.ariaLabelButtonAdd) || 'Add Contrast',
-            nameButtonRemove: (contrastOptions && contrastOptions.nameButtonRemove) || 'Remove Contrast',
-            ariaLabelButtonRemove: (contrastOptions && contrastOptions.ariaLabelButtonRemove) || 'Remove Contrast'
+            nameButtonAdd: 'Add Contrast',
+            ariaLabelButtonAdd: 'Add Contrast',
+            nameButtonRemove: 'Remove Contrast',
+            ariaLabelButtonRemove: 'Remove Contrast'
         }
     };
 
+    // Set buttons name and aria label
+    if (options) {
+        for (var key in options) {
+            if (options.hasOwnProperty(key)) {
+                var obj = options[key];
 
-    // const $body = document.body;
-    const $accessibilityButtons = document.getElementsByClassName('accessibility-buttons');
-    // const $fontButton = document.getElementById('accessibility-font');
-    const $contrastButton = document.getElementsByClassName('accessibility-buttons--contrast')[0];
-
-    // storageFont = localStorage.accessibility_font,
-    const storageContrast = localStorage.accessibility_contrast;
-
-    // // Check if exist storage and set the correct button names and aria attributes
-    // if (!settings.font.steps.enable) {
-    //     if (storageFont && $fontButton) {
-    //         $body.classList.add('accessibility-font');
-
-    //         $fontButton.innerHTML = settings.font.nameButtonDecrease;
-    //         $fontButton.setAttribute('aria-label', settings.font.ariaLabelButtonDecrease);
-    //     } else if ($fontButton) {
-    //         $fontButton.innerHTML = settings.font.nameButtonIncrease;
-    //         $fontButton.setAttribute('aria-label', settings.font.ariaLabelButtonIncrease);
-    //     }
-    // }
-
-    if (storageContrast && $contrastButton) {
-    //     $body.classList.add('accessibility-contrast');
-
-        $contrastButton.innerHTML = settings.contrast.nameButtonRemove;
-        $contrastButton.setAttribute('aria-label', settings.contrast.ariaLabelButtonRemove);
-    } else if ($contrastButton) {
-        $contrastButton.innerHTML = settings.contrast.nameButtonAdd;
-        $contrastButton.setAttribute('aria-label', settings.contrast.ariaLabelButtonAdd);
+                for (var prop in obj) {
+                    if (obj.hasOwnProperty(prop)) {
+                        setting[key][prop] = obj[prop];
+                    }
+                }
+            }
+        }
     }
 
+    var $body = document.body,
+        $accessibilityButtons = [...document.querySelectorAll('[data-accessibility]')],
+        $fontButton = $accessibilityButtons.filter(button => {
+            return button.getAttribute('data-accessibility') === 'font';
+        }),
+        $contrastButton = $accessibilityButtons.filter(button => {
+            return button.getAttribute('data-accessibility') === 'contrast';
+        }),
+        storageFont = localStorage.accessibility_font,
+        storageContrast = localStorage.accessibility_contrast;
+
+    // Check if exist storage and set the correct button names and aria attributes
+    if (storageFont && $fontButton) {
+        $body.classList.add('accessibility-font');
+
+        $fontButton.forEach(button => {
+            button.innerHTML = setting.font.nameButtonDecrease;
+            button.setAttribute('aria-label', setting.font.ariaLabelButtonDecrease);
+        });
+    } else if ($fontButton) {
+        $fontButton.forEach(button => {
+            button.innerHTML = setting.font.nameButtonIncrease;
+            button.setAttribute('aria-label', setting.font.ariaLabelButtonIncrease);
+        });
+    }
+
+    if (storageContrast && $contrastButton) {
+        $body.classList.add('accessibility-contrast');
+
+        $contrastButton.forEach(button => {
+            button.innerHTML = setting.contrast.nameButtonRemove;
+            button.setAttribute('aria-label', setting.contrast.ariaLabelButtonRemove);
+        });
+    } else if ($contrastButton) {
+        $contrastButton.forEach(button => {
+            button.innerHTML = setting.contrast.nameButtonAdd;
+            button.setAttribute('aria-label', setting.contrast.ariaLabelButtonAdd);
+        });
+    }
 
     /**
-     * Bind click event
+     * Get the click event
      * Rename the buttons
      * Apply/Remove Contrast or Font Size
      * Manage storage
      */
-    function applyActions() {
-        return function() {
-            const context = this;
+    function accessibility() {
+        return function () {
+            const $this = this;
+            const type = $this.getAttibute('data-accessibility');
+            const classname = `accessibility-${type}`;
 
 
-    //         if (hasClass($body, context.getAttribute('id'))) {
-    //             $body.classList.remove(context.getAttribute('id'));
+            if (hasClass($body, classname)) {
+                $body.classList.remove(classname);
 
-            if (hasClass(context, 'accessibility-buttons--contrast')) {
-                console.log('context', context);
-                    context.innerHTML = settings.font.nameButtonIncrease;
-                    // context.innerHTML = settings.font.nameButtonIncrease;
-                    // context.setAttribute('aria-label', settings.font.ariaLabelButtonIncrease);
+                if (type === 'font') {
+                    $fontButton.forEach(button => {
+                        button.innerHTML = setting.font.nameButtonIncrease;
+                        button.setAttribute('aria-label', setting.font.ariaLabelButtonIncrease);
+                    });
 
-    //                 localStorage.removeItem('accessibility_font');
-    //             } else {
-    //                 context.innerHTML = settings.contrast.nameButtonAdd;
-    //                 context.setAttribute('aria-label', settings.contrast.ariaLabelButtonAdd);
+                    localStorage.removeItem('accessibility_font');
+                } else if (type === 'contrast') {
+                    $contrastButton.forEach(button => {
+                        button.innerHTML = setting.contrast.nameButtonAdd;
+                        button.setAttribute('aria-label', setting.contrast.ariaLabelButtonAdd);
+                    });
 
-    //                 localStorage.removeItem('accessibility_contrast');
-    //             }
-    //         } else {
-    //             $body.classList.add(context.getAttribute('id'));
+                    localStorage.removeItem('accessibility_contrast');
+                }
+            } else {
+                $body.classList.add(classname);
 
-    //             if (context.getAttribute('id') === 'accessibility-font') {
-    //                 if (!storageFont) {
-    //                     localStorage.setItem('accessibility_font', true);
-    //                 }
-    //                 context.innerHTML = settings.font.nameButtonDecrease;
-    //                 context.setAttribute('aria-label', settings.font.ariaLabelButtonDecrease);
-    //             } else {
-    //                 if (!storageContrast) {
-    //                     localStorage.setItem('accessibility_contrast', true);
-    //                 }
-    //                 context.innerHTML = settings.contrast.nameButtonRemove;
-    //                 context.setAttribute('aria-label', settings.contrast.ariaLabelButtonRemove);
-    //             }
+                if (type === 'font') {
+                    if (!storageFont) {
+                        localStorage.setItem('accessibility_font', true);
+                    }
+                    $fontButton.forEach(button => {
+                        button.innerHTML = setting.font.nameButtonDecrease;
+                        button.setAttribute('aria-label', setting.font.ariaLabelButtonDecrease);
+                    });
+                } else if (type === 'contrast') {
+                    if (!storageContrast) {
+                        localStorage.setItem('accessibility_contrast', true);
+                    }
+                    $contrastButton.forEach(button => {
+                        button.innerHTML = setting.contrast.nameButtonRemove;
+                        button.setAttribute('aria-label', setting.contrast.ariaLabelButtonRemove);
+                    });
+                }
             }
         };
     }
 
     // Listening Click Event
     for (var i = 0; i < $accessibilityButtons.length; i++) {
-        $accessibilityButtons[i].addEventListener('click', applyActions());
+        $accessibilityButtons[i].addEventListener('click', accessibility());
     }
 };
